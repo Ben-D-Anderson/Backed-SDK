@@ -24,8 +24,8 @@ public class BackedAPI {
      * @param url the url of backed site, e.g. "http://localhost:8080/"
      */
     public BackedAPI(String url) {
-        if (!url.endsWith("/")) url += "/api/";
-        this.url = url;
+        if (!url.endsWith("/")) url += "/";
+        this.url = url + "api/";
     }
 
     /**
