@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Backed-SDK:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Backed_SDK_jar</output-path>
+    <root id="archive" name="Backed-SDK.jar">
+      <element id="module-output" name="Backed-SDK" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/gson-2.2.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
