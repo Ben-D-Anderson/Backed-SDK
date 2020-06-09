@@ -44,7 +44,8 @@ public class BackedAPI {
         connectionBuilder.setUrl(url + "login");
         connectionBuilder.setMethod("POST");
         connectionBuilder.openConnection();
-        connectionBuilder.getOutputStream().write(("username=" + username + "&password=" + password).getBytes());
+        connectionBuilder.getHttpUrlConnection().getOutputStream().write(("username=" + username + "&password=" + password).getBytes());
+        connectionBuilder.connect();
         JsonElement jsonElement = connectionBuilder.readJson();
         Response response = new Response(jsonElement);
         if (response.isSuccess()) {
@@ -66,9 +67,30 @@ public class BackedAPI {
         connectionBuilder.setMethod("GET");
         connectionBuilder.setCookie(this.sessionCookie);
         connectionBuilder.openConnection();
-        JsonElement jsonElement = connectionBuilder.readJson();
+        connectionBuilder.connect();
         this.sessionCookie = null;
-        return new Response(jsonElement);
+        return new Response(connectionBuilder.readJson());
+    }
+
+    public Response downloadFileToOutputStream(String path, OutputStream outputStream, byte[] buffer) throws IOException {
+        ConnectionBuilder connectionBuilder = new ConnectionBuilder();
+        connectionBuilder.setUrl(url + "download");
+        connectionBuilder.setMethod("POST");
+        connectionBuilder.setCookie(this.sessionCookie);
+        connectionBuilder.openConnection();
+        connectionBuilder.getHttpUrlConnection().getOutputStream().write(("filename=" + path).getBytes());
+        connectionBuilder.connect();
+
+        if (connectionBuilder.getHttpUrlConnection().getContentType().equalsIgnoreCase("application/json")) {
+            return new Response(connectionBuilder.readJson());
+        }
+
+        int len;
+        while ((len = connectionBuilder.getHttpUrlConnection().getInputStream().read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+
+        return new Response(new JsonParser().parse("{\"error\": \"false\", \"message\": \"file successfully written to output stream\"}"));
     }
 
     /**
@@ -83,9 +105,9 @@ public class BackedAPI {
         connectionBuilder.setMethod("POST");
         connectionBuilder.setCookie(this.sessionCookie);
         connectionBuilder.openConnection();
-        connectionBuilder.getOutputStream().write(("filename=" + path).getBytes());
-        JsonElement jsonElement = connectionBuilder.readJson();
-        return new Response(jsonElement);
+        connectionBuilder.getHttpUrlConnection().getOutputStream().write(("filename=" + path).getBytes());
+        connectionBuilder.connect();
+        return new Response(connectionBuilder.readJson());
     }
 
     /**
@@ -101,6 +123,7 @@ public class BackedAPI {
         connectionBuilder.setMethod("GET");
         connectionBuilder.setCookie(this.sessionCookie);
         connectionBuilder.openConnection();
+        connectionBuilder.connect();
         JsonElement jsonElement = connectionBuilder.readJson();
         Response response = new Response(jsonElement);
         if (response.isSuccess()) return new FilesResponse(jsonElement);
@@ -117,7 +140,7 @@ public class BackedAPI {
     }
 
     private static class ConnectionBuilder {
-        private String url, method = "POST";
+        private String url, method;
         private SessionCookie sessionCookie;
         private HttpURLConnection connection;
 
@@ -133,8 +156,8 @@ public class BackedAPI {
             this.method = method;
         }
 
-        public OutputStream getOutputStream() throws IOException {
-            return connection.getOutputStream();
+        public HttpURLConnection getHttpUrlConnection() throws IOException {
+            return connection;
         }
 
         public void openConnection() throws IOException {
@@ -151,8 +174,11 @@ public class BackedAPI {
             this.connection = connection;
         }
 
-        public JsonElement readJson() throws IOException {
+        public void connect() throws IOException {
             connection.connect();
+        }
+
+        public JsonElement readJson() throws IOException {
             try (BufferedReader in = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()))) {
                 StringBuilder response = new StringBuilder();
