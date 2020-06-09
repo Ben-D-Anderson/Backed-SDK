@@ -15,9 +15,9 @@ public class Response {
     private boolean success;
     private String message;
 
-    public Response(JsonElement jsonObject) {
-        success = !jsonObject.getAsJsonObject().get("error").getAsBoolean();
-        message = jsonObject.getAsJsonObject().get("message").getAsString();
+    public Response(JsonElement jsonElement) {
+        success = !jsonElement.getAsJsonObject().get("error").getAsBoolean();
+        message = jsonElement.getAsJsonObject().get("message").getAsString();
     }
 
 }

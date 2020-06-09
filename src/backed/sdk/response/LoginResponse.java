@@ -6,9 +6,9 @@ import com.google.gson.JsonObject;
 
 public class LoginResponse extends Response {
 
-    public LoginResponse(JsonElement jsonObject) {
-        super(jsonObject);
-        JsonObject cookieObject = jsonObject.getAsJsonObject().getAsJsonObject("cookie");
+    public LoginResponse(JsonElement jsonElement) {
+        super(jsonElement);
+        JsonObject cookieObject = jsonElement.getAsJsonObject().getAsJsonObject("cookie");
         this.cookie = new SessionCookie(cookieObject.get("name").getAsString(), cookieObject.get("value").getAsString(), cookieObject.get("expiry").getAsLong());
     }
 
