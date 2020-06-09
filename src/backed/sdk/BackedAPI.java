@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -42,15 +43,38 @@ public class BackedAPI {
         connectionBuilder.setUrl(url + "login");
         connectionBuilder.setMethod("POST");
         connectionBuilder.openConnection();
-        connectionBuilder.getConnection().getOutputStream().write(("username=" + username + "&password=" + password).getBytes());
+        connectionBuilder.getOutputStream().write(("username=" + username + "&password=" + password).getBytes());
         JsonElement jsonElement = connectionBuilder.readJson();
         Response response = new Response(jsonElement);
-        if (response.isSuccess())
-            return new LoginResponse(jsonElement);
+        if (response.isSuccess()) {
+            LoginResponse loginResponse = new LoginResponse(jsonElement);
+            this.sessionCookie = loginResponse.getCookie();
+            return loginResponse;
+        }
         return response;
     }
 
-    private class ConnectionBuilder {
+    /**
+     * Logout the current user and invalidate the session cookie
+     *
+     * @return Response object of response.
+     */
+    public Response logout() throws IOException {
+        ConnectionBuilder connectionBuilder = new ConnectionBuilder();
+        connectionBuilder.setUrl(url + "logout");
+        connectionBuilder.setMethod("GET");
+        connectionBuilder.setCookie(this.sessionCookie);
+        connectionBuilder.openConnection();
+        JsonElement jsonElement = connectionBuilder.readJson();
+        this.sessionCookie = null;
+        return new Response(jsonElement);
+    }
+
+    public void setSessionCookie(SessionCookie sessionCookie) {
+        this.sessionCookie = sessionCookie;
+    }
+
+    private static class ConnectionBuilder {
         private String url, method = "POST";
         private SessionCookie sessionCookie;
         private HttpURLConnection connection;
@@ -67,8 +91,8 @@ public class BackedAPI {
             this.method = method;
         }
 
-        public HttpURLConnection getConnection() {
-            return connection;
+        public OutputStream getOutputStream() throws IOException {
+            return connection.getOutputStream();
         }
 
         public void openConnection() throws IOException {
