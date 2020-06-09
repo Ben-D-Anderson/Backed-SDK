@@ -1,6 +1,7 @@
 package backed.sdk;
 
 import backed.sdk.obj.SessionCookie;
+import backed.sdk.response.FilesResponse;
 import backed.sdk.response.LoginResponse;
 import backed.sdk.response.Response;
 import com.google.gson.JsonElement;
@@ -70,6 +71,47 @@ public class BackedAPI {
         return new Response(jsonElement);
     }
 
+    /**
+     * Delete a specified file belonging to the current user
+     *
+     * @param path path of file to delete
+     * @return Response object of response.
+     */
+    public Response deleteFile(String path) throws IOException {
+        ConnectionBuilder connectionBuilder = new ConnectionBuilder();
+        connectionBuilder.setUrl(url + "delete");
+        connectionBuilder.setMethod("POST");
+        connectionBuilder.setCookie(this.sessionCookie);
+        connectionBuilder.openConnection();
+        connectionBuilder.getOutputStream().write(("filename=" + path).getBytes());
+        JsonElement jsonElement = connectionBuilder.readJson();
+        return new Response(jsonElement);
+    }
+
+    /**
+     * List files of current user
+     *
+     * @return Response object if list files failed,
+     * FilesResponse object if list files was successful
+     * (Response is superclass of FilesResponse)
+     */
+    public Response listFiles() throws IOException {
+        ConnectionBuilder connectionBuilder = new ConnectionBuilder();
+        connectionBuilder.setUrl(url + "files");
+        connectionBuilder.setMethod("GET");
+        connectionBuilder.setCookie(this.sessionCookie);
+        connectionBuilder.openConnection();
+        JsonElement jsonElement = connectionBuilder.readJson();
+        Response response = new Response(jsonElement);
+        if (response.isSuccess()) return new FilesResponse(jsonElement);
+        return response;
+    }
+
+    /**
+     * Reuse an active session cookie instead of logging in
+     *
+     * @param sessionCookie SessionCookie object of cookie
+     */
     public void setSessionCookie(SessionCookie sessionCookie) {
         this.sessionCookie = sessionCookie;
     }
