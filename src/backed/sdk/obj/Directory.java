@@ -11,26 +11,35 @@ public class Directory {
     private final Directory parentDirectory;
     private final String name, path;
 
-    public Directory(String name, String path, JsonArray jsonArray, Directory parentDirectory) {
+    private final long lastModified;
+
+    public Directory(String name, String path, JsonArray jsonArray, Directory parentDirectory, long lastModified) {
         this.name = name;
         this.path = path;
         this.parentDirectory = parentDirectory;
+        this.lastModified = lastModified;
         for (int i = 0; i < jsonArray.size(); i++) {
             if (jsonArray.get(i).getAsJsonObject().get("type").getAsString().equals("directory")) {
                 String directoryName = jsonArray.get(i).getAsJsonObject().get("name").getAsString();
                 String directoryPath = path + directoryName + "/";
+                long directoryLastModified = jsonArray.get(i).getAsJsonObject().get("last_modified").getAsLong();
                 JsonArray files = jsonArray.get(i).getAsJsonObject().get("files").getAsJsonArray();
-                directories.add(new Directory(directoryName, directoryPath, files, this));
+                directories.add(new Directory(directoryName, directoryPath, files, this, directoryLastModified));
             } else {
                 String fileName = jsonArray.get(i).getAsJsonObject().get("name").getAsString();
                 String filePath = path + fileName;
-                files.add(new File(fileName, filePath, this));
+                long fileLastModified = jsonArray.get(i).getAsJsonObject().get("last_modified").getAsLong();
+                files.add(new File(fileName, filePath, this, fileLastModified));
             }
         }
     }
 
     public ArrayList<Directory> getDirectories() {
         return directories;
+    }
+
+    public long getLastModified() {
+        return lastModified;
     }
 
     public ArrayList<File> getFiles() {

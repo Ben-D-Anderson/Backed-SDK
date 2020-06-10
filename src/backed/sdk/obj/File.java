@@ -2,10 +2,11 @@ package backed.sdk.obj;
 
 public class File {
 
-    public File(String name, String path, Directory directory) {
+    public File(String name, String path, Directory directory, long lastModified) {
         this.name = name;
         this.path = path;
         this.directory = directory;
+        this.lastModified = lastModified;
     }
 
     public Directory getDirectory() {
@@ -20,7 +21,12 @@ public class File {
         return path;
     }
 
+    public long getLastModified() {
+        return lastModified;
+    }
+
     private final String name, path;
     private final Directory directory;
+    private final long lastModified;
 
 }

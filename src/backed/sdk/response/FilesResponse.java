@@ -11,7 +11,7 @@ public class FilesResponse extends Response {
     public FilesResponse(JsonElement jsonElement) {
         super(jsonElement);
         JsonArray filesJsonArray = jsonElement.getAsJsonObject().getAsJsonArray("files");
-        rootDirectory = new Directory("", "", filesJsonArray, null);
+        rootDirectory = new Directory("", "", filesJsonArray, null, 0L);
     }
 
     public Directory getRootDirectory() {
