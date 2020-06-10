@@ -1,5 +1,6 @@
 package backed.sdk;
 
+import backed.sdk.obj.FileUploadObject;
 import backed.sdk.obj.SessionCookie;
 import backed.sdk.response.FilesResponse;
 import backed.sdk.response.LoginResponse;
@@ -7,13 +8,12 @@ import backed.sdk.response.Response;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class BackedAPI {
 
@@ -72,6 +72,53 @@ public class BackedAPI {
         return new Response(connectionBuilder.readJson());
     }
 
+    /**
+     * Upload a file to the storage of current user.
+     *
+     * @param fileUploadObjects The FileUploadObject of the file to upload.
+     * @return Response object of json response.
+     */
+    public Response[] uploadFiles(FileUploadObject... fileUploadObjects) throws IOException {
+        ConnectionBuilder connectionBuilder = new ConnectionBuilder();
+        connectionBuilder.setUrl(url + "upload");
+        connectionBuilder.setMethod("POST");
+        connectionBuilder.setCookie(this.sessionCookie);
+        connectionBuilder.openConnection();
+
+        String boundary = Long.toHexString(System.currentTimeMillis());
+        String CRLF = "\r\n";
+        connectionBuilder.getHttpUrlConnection().setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(connectionBuilder.getHttpUrlConnection().getOutputStream(), StandardCharsets.UTF_8), true);
+
+        for (int i = 0; i < fileUploadObjects.length; i++) {
+            FileUploadObject f = fileUploadObjects[i];
+            writer.append("--").append(boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"file" + i + "\"; filename=\"").append(f.getPath()).append("\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=").append("UTF-8").append(CRLF);
+            writer.append(CRLF).flush();
+            Files.copy(f.getFile().toPath(), connectionBuilder.getHttpUrlConnection().getOutputStream());
+            connectionBuilder.getHttpUrlConnection().getOutputStream().flush();
+            writer.append(CRLF).flush();
+        }
+        writer.append("--").append(boundary).append("--").append(CRLF).flush();
+
+        connectionBuilder.connect();
+        JsonElement jsonElement = connectionBuilder.readJson();
+        Response[] responses = new Response[jsonElement.getAsJsonArray().size()];
+        for (int i = 0; i < jsonElement.getAsJsonArray().size(); i++) {
+            responses[i] = new Response(jsonElement.getAsJsonArray().get(i));
+        }
+        return responses;
+    }
+
+    /**
+     * Download specific file belonging to current user to output stream
+     *
+     * @param path path to download file from on web server (includes file name)
+     * @param outputStream output stream to write downloaded file to
+     * @param buffer byte array to act as a buffer when downloading file
+     * @return Response object for the json response
+     */
     public Response downloadFileToOutputStream(String path, OutputStream outputStream, byte[] buffer) throws IOException {
         ConnectionBuilder connectionBuilder = new ConnectionBuilder();
         connectionBuilder.setUrl(url + "download");
