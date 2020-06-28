@@ -78,7 +78,11 @@ public class BackedAPI {
      * @param fileUploadObjects The FileUploadObject of the file to upload.
      * @return Response object of json response.
      */
-    public Response[] uploadFiles(FileUploadObject... fileUploadObjects) throws IOException {
+    public Response[] uploadFiles(FileUploadObject[] fileUploadObjects) throws IOException {
+        if (fileUploadObjects.length == 0) {
+            return null;
+        }
+
         ConnectionBuilder connectionBuilder = new ConnectionBuilder();
         connectionBuilder.setUrl(url + "upload");
         connectionBuilder.setMethod("POST");
