@@ -1,4 +1,4 @@
-<h1>**Backed SDK**</h1>
+<h1><strong>Backed SDK</strong></h1>
 <h3>Getting Started</h3>
 To start you will need an instance of the API, this can be achieved by creating an instance of the BackedAPI class. An url of a running backed site must be provided into the constructor as a string.
 For example, if the site was running on localhost, you may use the following code to obtain an API instance:
@@ -47,6 +47,7 @@ Once logged out, other methods in the api such as listFiles will no longer work 
 
 <h3>Listing Files</h3>
 Using your api instance, you can call the listFiles method which returns a Response object, and if successful, will return a FilesResponse instance which is a subclass Response.
+
 ```
 Response response = api.listFiles();
 if (response instanceof FilesResponse) {
