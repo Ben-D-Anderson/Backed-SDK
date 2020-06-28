@@ -1,6 +1,8 @@
 package backed.sdk.obj;
 
-public class SessionCookie {
+import java.io.Serializable;
+
+public class SessionCookie implements Serializable {
 
     public String getName() {
         return name;
