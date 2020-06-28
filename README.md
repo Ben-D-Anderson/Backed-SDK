@@ -1,5 +1,5 @@
-# **Backed SDK**
-###Getting Started
+<h1>**Backed SDK**</h1>
+<h3>Getting Started</h3>
 To start you will need an instance of the API, this can be achieved by creating an instance of the BackedAPI class. An url of a running backed site must be provided into the constructor as a string.
 For example, if the site was running on localhost, you may use the following code to obtain an API instance:
 ```
@@ -34,7 +34,7 @@ It is worth noting that the getExpiry method in SessionCookie will return the ti
 If the login wasn't successful, then to understand what went wrong you can call the Response.getMessage() method which returns the response message from the server - this is present for every response.
 <hr>
 
-###Logging Out
+<h3>Logging Out</h3>
 Using your api instance, you can call the logout method which will invalidate the current cookie and logout the user. As always, a Response object is returned and you can check if the logout worked or not with Response.isSuccess() which returns a boolean.
 
 Logging out will only work if the user is actually logged in, and their cookie is still valid. Here is an example of logging out:
@@ -45,7 +45,7 @@ Response response = api.logout()
 Once logged out, other methods in the api such as listFiles will no longer work unless the login method or setSessionCookie method is successfully executed.
 <hr>
 
-###Listing Files
+<h3>Listing Files</h3>
 Using your api instance, you can call the listFiles method which returns a Response object, and if successful, will return a FilesResponse instance which is a subclass Response.
 ```
 Response response = api.listFiles();
@@ -66,7 +66,7 @@ filesResponse.getRootDirectory().getDirectories().stream()
 ```
 <hr>
 
-###Deleting Files
+<h3>Deleting Files</h3>
 Using your api instance, you can call the deleteFile method which takes the path of the file to delete relative to the root directory of the user as a string for parameters and returns a Response object.
 
 The example below attempts to delete the file "filename.txt" in the user's root directory and checks if the operation was successful.
@@ -81,7 +81,7 @@ if (response.isSuccess()) {
 ```
 <hr>
 
-###Downloading Files
+<h3>Downloading Files</h3>
 Using your api instance, you can call the downloadFileToOutputStream method which takes three parameters:
 - The path of the file to download relative to the user's root directory as a string.
 - The OutputStream to write the data downloaded to, this will often be a FileOutputStream object.
@@ -102,7 +102,7 @@ if (response.isSuccess()) {
 ```
 <hr>
 
-###Uploading Files
+<h3>Uploading Files</h3>
 Using your api instance, you can call the uploadFiles method which takes an array of FileUploadObject as the parameter to allow uploading of one or multiple files in one call. The method returns an array of Response objects which are linked to each FileUploadObject (with the same index) that was supplied as an argument. If the array is empty, the method will return null.
 
 FileUploadObject is a class which can be initialised using the constructor FileUploadObject(java.io.File file, String path). The first parameter, file, is the java.io.File object associated with the file on the local machine. The second parameter, path, is the path for the file to be uploaded to which is relative to the user's root directory.
@@ -118,7 +118,7 @@ for (Response response : responses) {
 ```
 <hr>
 
-###Manually Setting Session Cookie
+<h3>Manually Setting Session Cookie</h3>
 For optimization within an application, it may be preferred to store and reuse a session cookie until it's expiry time therefore creating the least amount of login requests.
 
 This is where the method setSessionCookie comes in as it takes a SessionCookie object as it's only parameter.
