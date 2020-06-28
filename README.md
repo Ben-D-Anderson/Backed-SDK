@@ -9,7 +9,7 @@ BackedAPI api = new BackedAPI("http://localhost:8080");
 Please bear in mind that an instance of the api is directly related to one user account and another instance should be created if you wish to use a different user account.
 <hr>
 
-###Logging In
+<h3>Logging In</h3>
 Using your api instance, you can call the login method which takes a username and password as strings for parameters. The login method returns a Response object, and if successful, will return a LoginResponse instance which is a subclass Response.
 ```
 Response response = api.login("username", "password");
