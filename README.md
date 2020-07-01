@@ -3,7 +3,7 @@
 To start you will need an instance of the API, this can be achieved by creating an instance of the BackedAPI class. An url of a running backed site must be provided into the constructor as a string.
 For example, if the site was running on localhost, you may use the following code to obtain an API instance:
 
-```
+```java
 BackedAPI api = new BackedAPI("http://localhost:8080");
 ```
 
@@ -13,7 +13,7 @@ Please bear in mind that an instance of the api is directly related to one user 
 <h3>Logging In</h3>
 Using your api instance, you can call the login method which takes a username and password as strings for parameters. The login method returns a Response object, and if successful, will return a LoginResponse instance which is a subclass Response.
 
-```
+```java
 Response response = api.login("username", "password");
 if (response instanceof LoginResponse) {
     LoginResponse loginResponse = (LoginResponse) response;
@@ -28,7 +28,7 @@ If the login was successful, you can cast the Response to a LoginResponse object
 The LoginResponse class has a method called getCookie which returns an instance of SessionCookie.
 You can gather the name, value and expiry of the cookie using the code below.
 
-```
+```java
 String cookieName = loginResponse.getCookie().getName();
 String cookieValue = loginResponse.getCookie().getValue();
 long cookieExpiry = loginResponse.getCookie().getExpiry();
@@ -44,7 +44,7 @@ Using your api instance, you can call the logout method which will invalidate th
 
 Logging out will only work if the user is actually logged in, and their cookie is still valid. Here is an example of logging out:
 
-```
+```java
 Response response = api.logout()
 ```
 
@@ -54,7 +54,7 @@ Once logged out, other methods in the api such as listFiles will no longer work 
 <h3>Listing Files</h3>
 Using your api instance, you can call the listFiles method which returns a Response object, and if successful, will return a FilesResponse instance which is a subclass Response.
 
-```
+```java
 Response response = api.listFiles();
 if (response instanceof FilesResponse) {
     FilesResponse filesResponse = (FilesResponse) response;
@@ -68,7 +68,7 @@ The FilesResponse class extends the Response class whilst also having the method
 
 The example below demonstrates one way that all directory names in the root folder of the user can be output from the FilesResponse object:
 
-```
+```java
 filesResponse.getRootDirectory().getDirectories().stream()
                                                     .map(x -> x.getName())
                                                     .forEach(System.out::println);
@@ -81,7 +81,7 @@ Using your api instance, you can call the deleteFile method which takes the path
 
 The example below attempts to delete the file "filename.txt" in the user's root directory and checks if the operation was successful.
 
-```
+```java
 Response response = api.deleteFile("filename.txt");
 if (response.isSuccess()) {
     //File was deleted
@@ -101,7 +101,7 @@ Using your api instance, you can call the downloadFileToOutputStream method whic
 
 The example below demonstrates downloading a file named "filename.txt" in the user's root directory onto the local machine at the path "D:\Downloads\downloaded.txt" with a byte buffer of 1000000 bytes (1000 x 1000):
 
-```
+```java
 String path = "filename.txt";
 FileOutputStream fos = new FileOutputStream("D:\\Downloads\\downloaded.txt");
 byte[] buffer = new byte[1000 * 1000];
@@ -122,7 +122,7 @@ FileUploadObject is a class which can be initialised using the constructor FileU
 
 The example below demonstrates uploading a file from the local machine ("D:\Downloads\fileToUpload.txt") to the backed server with the path "uploaded.txt" relative to the user's root directory. The messages of all supplied Response objects are then printed.
 
-```
+```java
 File file = new File("D:\\Downloads\\fileToUpload.txt");
 FileUploadObject fuo = new FileUploadObject(file, "uploaded.txt");
 Response[] responses = api.uploadFiles(new FileUploadObject[] { fuo });
