@@ -133,6 +133,24 @@ for (Response response : responses) {
 
 <hr>
 
+<h3>Getting File Hashes</h3>
+Using your api instance, you can call the getFileHash method which takes the path of the file to get the hash of relative to the user's root directory as a string.
+
+The example below demonstrates retrieving the SHA256 hash of a file named "filename.txt".
+
+```java
+Response response = api.getFileHash("filename.txt");
+if (response.isSuccess()) {
+    //File hash retrievied
+    System.out.println(response.getMessage());
+} else {
+    //File hash couldn't retrievied
+    //Debug using response.getMessage()
+}
+```
+
+<hr>
+
 <h3>Manually Setting Session Cookie</h3>
 For optimization within an application, it may be preferred to store and reuse a session cookie until it's expiry time therefore creating the least amount of login requests.
 

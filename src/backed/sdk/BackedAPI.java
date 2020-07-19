@@ -147,7 +147,7 @@ public class BackedAPI {
     /**
      * Delete a specified file belonging to the current user
      *
-     * @param path path of file to delete
+     * @param path path of file to delete (relative to root directory of the user)
      * @return Response object of response.
      */
     public Response deleteFile(String path) throws IOException {
@@ -179,6 +179,23 @@ public class BackedAPI {
         Response response = new Response(jsonElement);
         if (response.isSuccess()) return new FilesResponse(jsonElement);
         return response;
+    }
+
+    /**
+     * Get SHA256 hash of a decrypted file
+     *
+     * @param path path of file to get the hash of (relative to root directory of the user)
+     * @return Response object of the response
+     */
+    public Response getFileHash(String path) throws IOException {
+        ConnectionBuilder connectionBuilder = new ConnectionBuilder();
+        connectionBuilder.setUrl(url + "hash");
+        connectionBuilder.setMethod("POST");
+        connectionBuilder.setCookie(this.sessionCookie);
+        connectionBuilder.openConnection();
+        connectionBuilder.getHttpUrlConnection().getOutputStream().write(("filename=" + path).getBytes());
+        connectionBuilder.connect();
+        return new Response(connectionBuilder.readJson());
     }
 
     /**
