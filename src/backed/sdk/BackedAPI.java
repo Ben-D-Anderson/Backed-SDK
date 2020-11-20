@@ -224,7 +224,7 @@ public class BackedAPI {
             this.method = method;
         }
 
-        public HttpURLConnection getHttpUrlConnection() throws IOException {
+        public HttpURLConnection getHttpUrlConnection() {
             return connection;
         }
 
