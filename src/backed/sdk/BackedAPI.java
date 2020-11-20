@@ -17,7 +17,7 @@ import java.nio.file.Files;
 
 public class BackedAPI {
 
-    private String url;
+    private final String url;
     private SessionCookie sessionCookie;
 
     /**
@@ -97,7 +97,7 @@ public class BackedAPI {
         for (int i = 0; i < fileUploadObjects.length; i++) {
             FileUploadObject f = fileUploadObjects[i];
             writer.append("--").append(boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"file" + i + "\"; filename=\"").append(f.getPath()).append("\"").append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"file").append(String.valueOf(i)).append("\"; filename=\"").append(f.getPath()).append("\"").append(CRLF);
             writer.append("Content-Type: text/plain; charset=").append("UTF-8").append(CRLF);
             writer.append(CRLF).flush();
             Files.copy(f.getFile().toPath(), connectionBuilder.getHttpUrlConnection().getOutputStream());
