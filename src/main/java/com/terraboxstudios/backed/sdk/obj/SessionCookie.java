@@ -1,4 +1,4 @@
-package backed.sdk.obj;
+package com.terraboxstudios.backed.sdk.obj;
 
 import java.io.Serializable;
 

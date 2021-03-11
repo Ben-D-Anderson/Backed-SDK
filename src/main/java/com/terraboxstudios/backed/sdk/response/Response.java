@@ -1,4 +1,4 @@
-package backed.sdk.response;
+package com.terraboxstudios.backed.sdk.response;
 
 import com.google.gson.JsonElement;
 
@@ -12,8 +12,8 @@ public class Response {
         return message;
     }
 
-    private boolean success;
-    private String message;
+    private final boolean success;
+    private final String message;
 
     public Response(JsonElement jsonElement) {
         success = !jsonElement.getAsJsonObject().get("error").getAsBoolean();

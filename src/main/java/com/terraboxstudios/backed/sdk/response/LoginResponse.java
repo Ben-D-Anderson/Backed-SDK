@@ -1,6 +1,6 @@
-package backed.sdk.response;
+package com.terraboxstudios.backed.sdk.response;
 
-import backed.sdk.obj.SessionCookie;
+import com.terraboxstudios.backed.sdk.obj.SessionCookie;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

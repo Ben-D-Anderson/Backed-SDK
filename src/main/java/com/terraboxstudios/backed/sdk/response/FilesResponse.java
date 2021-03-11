@@ -1,12 +1,12 @@
-package backed.sdk.response;
+package com.terraboxstudios.backed.sdk.response;
 
-import backed.sdk.obj.Directory;
+import com.terraboxstudios.backed.sdk.obj.Directory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 public class FilesResponse extends Response {
 
-    private Directory rootDirectory;
+    private final Directory rootDirectory;
 
     public FilesResponse(JsonElement jsonElement) {
         super(jsonElement);

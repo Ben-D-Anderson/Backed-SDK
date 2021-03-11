@@ -1,10 +1,10 @@
-package backed.sdk;
+package com.terraboxstudios.backed.sdk;
 
-import backed.sdk.obj.FileUploadObject;
-import backed.sdk.obj.SessionCookie;
-import backed.sdk.response.FilesResponse;
-import backed.sdk.response.LoginResponse;
-import backed.sdk.response.Response;
+import com.terraboxstudios.backed.sdk.obj.FileUploadObject;
+import com.terraboxstudios.backed.sdk.obj.SessionCookie;
+import com.terraboxstudios.backed.sdk.response.FilesResponse;
+import com.terraboxstudios.backed.sdk.response.LoginResponse;
+import com.terraboxstudios.backed.sdk.response.Response;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
